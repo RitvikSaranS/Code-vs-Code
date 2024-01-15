@@ -1,4 +1,5 @@
 const { MongoClient } = require("mongodb");
+const path = require("path");
 require("dotenv").config();
 
 const uri = process.env.MONGODB_URI;
@@ -13,7 +14,7 @@ async function getUserByUsername(username) {
       .findOne({ UT_Username: username });
     return user;
   } catch (error) {
-    logger(error.message);
+    logger(error.message, path.basename(__filename));
   } finally {
     await client.close();
   }
@@ -43,7 +44,7 @@ async function createUser(
       UT_UserStatus: "A",
     });
   } catch (error) {
-    logger(error.message);
+    logger(error.message, path.basename(__filename));
   } finally {
     await client.close();
   }

@@ -1,4 +1,5 @@
 const express = require("express");
+const path = require("path");
 const router = express.Router();
 const { getUserByUsername, createUser } = require("../models/User");
 const bcrypt = require("bcryptjs");
@@ -22,10 +23,10 @@ router.post("/register", async (req, res) => {
       lastname,
       alternatemail
     );
-    res.status(201).json({ message: "User registered successfully" });
+    rees.status(201).json({ message: "User registered successfully" });
   } catch (error) {
     res.status(500).json({ error: "Registration failed" });
-    logger(error.message);
+    logger(error.message, path.basename(__filename));
   }
 });
 
@@ -50,7 +51,7 @@ router.post("/login", async (req, res) => {
     res.status(200).json({ token });
   } catch (error) {
     res.status(500).json({ error: "Login failed" });
-    logger(error.message);
+    logger(error.message, path.basename(__filename));
   }
 });
 
