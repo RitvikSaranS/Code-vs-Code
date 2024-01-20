@@ -1,11 +1,12 @@
 const { MongoClient } = require("mongodb");
 const path = require("path");
+import logger from "../utils/logger";
 require("dotenv").config();
 
 const uri = process.env.MONGODB_URI;
 const client = new MongoClient(uri);
 
-async function getUserByUsername(username) {
+export async function getUserByUsername(username: string) {
   try {
     await client.connect();
     const database = client.db("CVC");
@@ -13,20 +14,20 @@ async function getUserByUsername(username) {
       .collection("user_table")
       .findOne({ UT_Username: username });
     return user;
-  } catch (error) {
+  } catch (error: any) {
     logger(error.message, path.basename(__filename));
   } finally {
     await client.close();
   }
 }
 
-async function createUser(
-  username,
-  hashedPassword,
-  email,
-  firstname,
-  lastname,
-  alternatemail
+export async function createUser(
+  username: string,
+  hashedPassword: string,
+  email: string,
+  firstname: string,
+  lastname: string,
+  alternatemail: string
 ) {
   try {
     await client.connect();
@@ -43,7 +44,7 @@ async function createUser(
       UT_AlternateMail: alternatemail,
       UT_UserStatus: "A",
     });
-  } catch (error) {
+  } catch (error: any) {
     logger(error.message, path.basename(__filename));
   } finally {
     await client.close();
