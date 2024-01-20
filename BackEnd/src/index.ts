@@ -1,12 +1,12 @@
-import express from 'express';
-import authRoutes from './auth/authController'
-import authenticateToken from './auth/authMiddleware'
+import express from "express";
+import authRoutes from "./routes/auth.route";
+import authenticateToken from "./middlewares/auth.middleware";
 
 const app = express();
 const PORT = process.env.PORT || 4000;
 
-// Middlewares
 app.use(express.json());
+
 app.use("/auth", authRoutes);
 app.use(authenticateToken);
 

@@ -50,8 +50,3 @@ export async function createUser(
     await client.close();
   }
 }
-
-module.exports = {
-  getUserByUsername,
-  createUser,
-};
