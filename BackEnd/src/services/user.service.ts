@@ -1,5 +1,6 @@
 const { MongoClient } = require("mongodb");
 const path = require("path");
+import { User } from "../models/user.model";
 import logger from "../utils/logger";
 require("dotenv").config();
 
@@ -13,6 +14,7 @@ export async function getUserByUsername(username: string) {
     const user = await database
       .collection("user_table")
       .findOne({ UT_Username: username });
+    console.log(user);
     return user;
   } catch (error: any) {
     logger(error.message, path.basename(__filename));
@@ -21,28 +23,21 @@ export async function getUserByUsername(username: string) {
   }
 }
 
-export async function createUser(
-  username: string,
-  hashedPassword: string,
-  email: string,
-  firstname: string,
-  lastname: string,
-  alternatemail: string
-) {
+export async function createUser(user: User) {
   try {
     await client.connect();
     const database = client.db("CVC");
     await database.collection("user_table").insertOne({
-      UT_Username: username,
-      UT_Password: hashedPassword,
-      UT_Email: email,
-      UT_FirstName: firstname,
-      UT_LastName: lastname,
-      UT_LastLoginDate: null,
-      UT_ProfilePicturePath: null,
-      UT_RegistrationDate: new Date(),
-      UT_AlternateMail: alternatemail,
-      UT_UserStatus: "A",
+      UT_Username: user.Username,
+      UT_Password: user.Password,
+      UT_Email: user.Email,
+      UT_FirstName: user.FirstName,
+      UT_LastName: user.LastName,
+      UT_LastLoginDate: user.LastLoginDate,
+      UT_ProfilePicturePath: user.ProfilePicturePath,
+      UT_RegistrationDate: user.RegistrationDate,
+      UT_AlternateMail: user.AlternateMail,
+      UT_UserStatus: user.UserStatus,
     });
   } catch (error: any) {
     logger(error.message, path.basename(__filename));
