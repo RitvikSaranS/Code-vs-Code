@@ -1,13 +1,13 @@
-const express = require("express");
-const path = require("path");
-const router = express.Router();
-const { getUserByUsername, createUser } = require("../models/User");
-const bcrypt = require("bcryptjs");
-const jwt = require("jsonwebtoken");
-const logger = require("../utils/logger");
+import express from 'express';
+import path from "path";
+import { getUserByUsername, createUser } from "../models/User";
+import bcrypt from "bcryptjs";
+import jwt from "jsonwebtoken";
+import logger from "../utils/logger";
 require("dotenv").config();
 
-const secretKey = process.env.AUTH_SECRET_KEY;
+const secretKey: string | undefined = process.env.AUTH_SECRET_KEY;
+const router = express.Router();
 
 // User Registration
 router.post("/register", async (req, res) => {
@@ -23,8 +23,8 @@ router.post("/register", async (req, res) => {
       lastname,
       alternatemail
     );
-    rees.status(201).json({ message: "User registered successfully" });
-  } catch (error) {
+    res.status(201).json({ message: "User registered successfully" });
+  } catch (error: any) {
     res.status(500).json({ error: "Registration failed" });
     logger(error.message, path.basename(__filename));
   }
@@ -44,15 +44,19 @@ router.post("/login", async (req, res) => {
       return res.status(401).json({ error: "Authentication failed" });
     }
 
-    const token = jwt.sign({ userId: user.UT_UserID }, secretKey, {
-      expiresIn: "1h",
-    });
-
-    res.status(200).json({ token });
-  } catch (error) {
+    if (secretKey) {
+      const token = jwt.sign({ userId: user.UT_UserID }, secretKey, {
+        expiresIn: "1h",
+      });
+      res.status(200).json({ token });
+    } else {
+      // Handle the case where secretKey is undefined
+      res.status(500).json({ error: "Login failed - Secret key is undefined" });
+    }
+  } catch (error: any) {
     res.status(500).json({ error: "Login failed" });
     logger(error.message, path.basename(__filename));
   }
 });
 
-module.exports = router;
+export default router;

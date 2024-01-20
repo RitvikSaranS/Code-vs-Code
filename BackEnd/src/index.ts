@@ -1,6 +1,6 @@
-const express = require("express");
-const authRoutes = require("./auth/authController");
-const authenticateToken = require("./auth/authMiddleware");
+import express from 'express';
+import authRoutes from './auth/authController'
+import authenticateToken from './auth/authMiddleware'
 
 const app = express();
 const PORT = process.env.PORT || 4000;
